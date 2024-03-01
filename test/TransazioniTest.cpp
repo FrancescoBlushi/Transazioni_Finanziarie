@@ -8,6 +8,8 @@ TEST(Transazioni,Creazionefile){
     Transazioni T1("Versamento",300,123456,"Roberto");
     ifstream file("Versamento_Roberto.txt");
     ASSERT_TRUE(file.is_open());
+    file.close();
+
 }
 TEST(Transazioni,Controllo_istanza){
     Transazioni T("Versamento",300.20,123456,"Roberto");
