@@ -7,19 +7,18 @@
 
 class Conto {
 public:
-    Conto(string nome,string cognome,int numero_conto,double saldo) : name(nome),surname(cognome),numero_Conto(numero_conto),
-    saldo(saldo) {
+    Conto(string nome,string cognome,string banca,int numero_conto,double saldo=0) : name(nome),surname(cognome),numero_Conto(numero_conto),
+    saldo(saldo),Banca(banca) {
         creaContoFile();
     }
 
     bool aggiungiTransazione(const Transazioni& transazione);
     void creaContoFile();
-    void readContoFile();
+    void readContoFile()const;
     void stampaTutteTransazioni();
-private:
-    vector<Transazioni>vectorTransazione;
-    string name;
-public:
+    bool operator==(const Conto& other ) const;
+
+
     const string &getName() const;
 
     void setName(const string &name);
@@ -36,10 +35,21 @@ public:
 
     void setSaldo(double saldo);
 
+
+
+    const vector<Transazioni> &getVectorTransazione() const;
+
+    const string &getBanca() const;
+
+    void setBanca(const string &banca);
+
 private:
+    string name;
+    string Banca;
     string surname;
     int numero_Conto;
     double saldo;
+    vector<Transazioni>vectorTransazione;
 
 };
 

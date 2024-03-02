@@ -21,7 +21,7 @@ bool Conto::aggiungiTransazione(const Transazioni & transazione) {
 }
 
 void Conto::creaContoFile() {
-    ofstream file(name + "_"+ surname+".txt");
+    ofstream file(name + "_"+ surname+Banca+".txt");
     if(file.is_open()){
         file<<"Titolare conto : "<<name<<" "<<surname<<endl;
         file<<"Numero di conto: "<<numero_Conto<<endl;
@@ -31,8 +31,8 @@ void Conto::creaContoFile() {
 
 }
 
-void Conto::readContoFile() {
-    ifstream readfile(name + "_"+ surname+".txt");
+void Conto::readContoFile() const {
+    ifstream readfile(name + "_"+ surname+Banca+".txt");
     if(readfile.is_open()){
         string linea;
         while(getline(readfile,linea)){
@@ -41,6 +41,13 @@ void Conto::readContoFile() {
         readfile.close();
     }
 
+}
+bool Conto::operator==(const Conto& other )  const {
+    if(Banca==other.Banca && numero_Conto==other.numero_Conto) {
+        return true;
+    }else{
+        return false;
+    }
 }
 
 const string &Conto::getName() const {
@@ -80,4 +87,16 @@ void Conto::stampaTutteTransazioni() {
         it.readFile();
     }
 
+}
+
+const string &Conto::getBanca() const {
+    return Banca;
+}
+
+void Conto::setBanca(const string &banca) {
+    Banca = banca;
+}
+
+const vector<Transazioni> &Conto::getVectorTransazione() const {
+    return vectorTransazione;
 }
