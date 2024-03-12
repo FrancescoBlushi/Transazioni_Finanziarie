@@ -12,11 +12,15 @@ TEST(Transazioni,Creazionefile){
 
 }
 TEST(Transazioni,Controllo_istanza){
-    Transazioni T("Versamento",300.20,123456,"Roberto");
-    EXPECT_EQ(T.getTipoOperazione(),"Versamento");
+    Transazioni T(1,300.20,123456,"Roberto",1,1,2004);
+    EXPECT_EQ(T.isTipoOperazione(),true);
     EXPECT_EQ(T.getDestinatario(),"Roberto");
     EXPECT_EQ(T.getImporto(),300.20);
     EXPECT_EQ(T.getNumeroConto(),123456);
+    EXPECT_EQ(T.getGiorno(),1);
+    EXPECT_EQ(T.getMese(),1);
+    EXPECT_EQ(T.getAnno(),2004);
+
 
 }
 TEST(Transazioni,Controllo_memoria) {
@@ -29,4 +33,9 @@ TEST(Transazioni,Controllo_ripristino_memoria){
     Tptr.reset();
     EXPECT_EQ(Tptr, nullptr);
 
+}
+
+TEST(Transazioni,Test_Eccezioni){
+    EXPECT_THROW(Transazioni T(1,300.20,123456,"Roberto",32,1,2004),invalid_argument);
+    EXPECT_THROW(Transazioni T(1,-31,123456,"Roberto",1,1,2004),invalid_argument);
 }

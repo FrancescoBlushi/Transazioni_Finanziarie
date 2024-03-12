@@ -1,11 +1,15 @@
 #include <algorithm>
 #include "Conto.h"
 
+
+
 bool Conto::aggiungiTransazione(const Transazioni & transazione) {
-    if(transazione.getTipoOperazione()=="Bonifico" || transazione.getTipoOperazione()=="Prelievo" || transazione.getTipoOperazione()=="Acquisto" ){
+    if(!transazione.isTipoOperazione()){
         if(transazione.getImporto()<=saldo){
             saldo=saldo-transazione.getImporto();
             vectorTransazione.push_back(transazione);
+            aggTransazioniFile(transazione);
+
             return true;
         }
         else{
@@ -15,6 +19,8 @@ bool Conto::aggiungiTransazione(const Transazioni & transazione) {
     else{
         saldo=saldo+transazione.getImporto();
         vectorTransazione.push_back(transazione);
+        aggTransazioniFile(transazione);
+
         return true;
     }
 
@@ -99,4 +105,52 @@ void Conto::setBanca(const string &banca) {
 
 const vector<Transazioni> &Conto::getVectorTransazione() const {
     return vectorTransazione;
+}
+
+void Conto::removeTransazione(Transazioni& transazione) {
+    auto it= find(vectorTransazione.begin(),vectorTransazione.end(),transazione);
+    if(it!=vectorTransazione.end()){
+        vectorTransazione.erase(it);
+    }
+
+}
+
+bool Conto::searchTransazione(Transazioni &transazione) {
+    auto it= find(vectorTransazione.begin(),vectorTransazione.end(),transazione);
+        if(it!=vectorTransazione.end()){
+            return false;
+    }
+        else{
+            return true;
+        }
+}
+
+void Conto::modificaTransazione(Transazioni &transazione,int numeroconto,double nuovoimporto,string destinatario) {
+    if(searchTransazione(transazione)){
+    transazione.setNumeroConto(numeroconto);
+    transazione.setDestinatario(destinatario);
+    transazione.setImporto(nuovoimporto);
+    }else{
+        return;
+    }
+
+}
+
+const int Conto::conta_nr_transazioni() {
+    return vectorTransazione.size();
+}
+
+void Conto::aggTransazioniFile(const Transazioni& transazione) {
+    ofstream file(name + "_"+ surname+Banca+".txt",ios::app);
+    if(file.is_open()){
+        file<<"Destinatario transazione: "<<transazione.getDestinatario()<<endl;
+        file<<"Importo  transazione: "<<transazione.getImporto()<<endl;
+        file<<"Data transaizone: "<<transazione.getGiorno()<<"/"<<transazione.getMese()<<"/"<<transazione.getAnno()<<endl;
+        file<<"Nuovo Saldo : "<<saldo<<endl;
+        file.close();
+    }
+    else{
+        cerr<<"File non aperto"<<endl;
+    }
+
 }

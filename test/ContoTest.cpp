@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "../Conto.h"
 
+
 #include "memory"
 
 
@@ -27,25 +28,46 @@ TEST(Conto,Testmemoria){
 }
 TEST(Conto,TestTransazionePrelievo){
     Conto C ("Andrea","Barella","BancoPosta",121212,3000.30);
-    Transazioni T("Prelievo",300);
+    Transazioni T(false,300);
     EXPECT_TRUE(C.aggiungiTransazione(T));
     EXPECT_EQ(2700.30,C.getSaldo());
 }
 TEST(Conto,TestTransazioneVersamento){
     Conto C ("Andrea","Barella","BancoPosta",121212,3000.30);
-    Transazioni T("Versamento",500);
+    Transazioni T(true,500);
     EXPECT_TRUE(C.aggiungiTransazione(T));
     EXPECT_EQ(3500.30,C.getSaldo());
 }
 TEST(Conto,Test_Prelievo_saldo_insufficente){
     Conto C ("Andrea","Barella","BancoPosta",121212,800.30);
-    Transazioni T("Bonifico",1000,121231,"UNIFI");
+    Transazioni T(false,1000,121231,"UNIFI");
     EXPECT_FALSE( C.aggiungiTransazione(T));
 }
 TEST(Conto,Test_controllo_aggiunta_transazione_vector){
     Conto C ("Andrea","Barella","BancoPosta",121212);
-    Transazioni T("Versamento",1500);
+    Transazioni T1(true,1500,3005,"Andrea",12,12,2004);
+    C.aggiungiTransazione(T1);
+    EXPECT_EQ(C.conta_nr_transazioni(),1);
+
+}
+TEST(Conto,Test_contorllo_rimovo_transazione){
+    Conto C ("Andrea","Barella","BancoPosta",121212);
+    Transazioni T1(true,1500,3005,"Andrea",12,12,2004);
+    Transazioni T2(true,1500,3005,"Roberto",12,12,2004);
+    C.aggiungiTransazione(T1);
+    C.aggiungiTransazione(T2);
+    C.removeTransazione(T1);
+
+    EXPECT_EQ(C.conta_nr_transazioni(),1);
+
+}
+TEST(Conto,Testo_controllo_modifica_transazione){
+    Conto C ("Andrea","Barella","BancoPosta",121212);
+    Transazioni T(false,1500,3005,"Andrea",12,12,2004);
     C.aggiungiTransazione(T);
-    EXPECT_EQ(C.getVectorTransazione().size(),1);
+    C.modificaTransazione(T,123445,300,"Roberta");
+    EXPECT_EQ(T.getNumeroConto(),123445);
+    EXPECT_EQ(T.getImporto(),300);
+    EXPECT_EQ(T.getDestinatario(),"Roberta");
 
 }

@@ -17,15 +17,11 @@ public:
     void cancellaConto(Conto& conto);
     void Creafile();
 
-    
+    //Set e Get
     const string &getName() const;
-
     void setName(const string &name);
-
     const string &getSurname() const;
-
     void setSurname(const string &surname);
-
     const vector<Conto> &getConti() const;
 private:
     string Name;

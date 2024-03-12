@@ -3,6 +3,8 @@
 #define TRANSAZIONI_FINANZIARIE_CONTO_H
 #include <vector>
 #include "Transazioni.h"
+#include <iostream>
+
 
 
 class Conto {
@@ -13,34 +15,27 @@ public:
     }
 
     bool aggiungiTransazione(const Transazioni& transazione);
+    void removeTransazione (Transazioni& transazione);
+    bool searchTransazione(Transazioni& transazione);
+    void modificaTransazione(Transazioni& transazione,int numeroconto,double nuovoimporto,string destinatario);
     void creaContoFile();
+    void aggTransazioniFile(const Transazioni& transazione);
     void readContoFile()const;
     void stampaTutteTransazioni();
     bool operator==(const Conto& other ) const;
+    int const conta_nr_transazioni();
 
-
+    //Set e Get
     const string &getName() const;
-
     void setName(const string &name);
-
     const string &getSurname() const;
-
     void setSurname(const string &surname);
-
     int getNumeroConto() const;
-
     void setNumeroConto(int numeroConto);
-
     double getSaldo() const;
-
     void setSaldo(double saldo);
-
-
-
     const vector<Transazioni> &getVectorTransazione() const;
-
     const string &getBanca() const;
-
     void setBanca(const string &banca);
 
 private:
