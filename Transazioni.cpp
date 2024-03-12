@@ -32,10 +32,29 @@ void Transazioni::readFile() {
     }
 
 }
+bool Transazioni::bisestile(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
 
-
-
-
+bool Transazioni::operator==(const Transazioni &other) const {
+    if(importo==other.importo && destinatario==other.destinatario && numeroConto==other.numeroConto)
+        return true;
+    else{
+        return false;
+    }
+}
+bool Transazioni::controlladata(int d, int m, int y) {
+    if(d<=data[m] && !bisestile(y) && d > 0 && m <= 12 && m > 0 && y > 0){
+        return true;
+    } else if(bisestile(y) && d==29 && m==2){
+        return true;
+    }
+    else if (bisestile(y) && d<=data[m] && d > 0 && m <= 12 && m > 0 && y > 0){
+        return true;
+    }else{
+        return false;
+    }
+}
 
 double Transazioni::getImporto() const {
     return importo;
@@ -61,37 +80,12 @@ void Transazioni::setDestinatario(const string &destinatario) {
     Transazioni::destinatario = destinatario;
 }
 
-bool Transazioni::operator==(const Transazioni &other) const {
-    if(importo==other.importo && destinatario==other.destinatario && numeroConto==other.numeroConto)
-    return true;
-    else{
-        return false;
-    }
-}
-
-bool Transazioni::bisestile(int year) {
-    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-}
-
 bool Transazioni::isTipoOperazione() const {
     return tipoOperazione;
 }
 
 void Transazioni::setTipoOperazione1(bool tipooperazione) {
     Transazioni::tipoOperazione = tipooperazione;
-}
-
-bool Transazioni::controlladata(int d, int m, int y) {
-    if(d<=data[m] && !bisestile(y) && d > 0 && m <= 12 && m > 0 && y > 0){
-        return true;
-    } else if(bisestile(y) && d==29 && m==2){
-        return true;
-    }
-    else if (bisestile(y) && d<=data[m] && d > 0 && m <= 12 && m > 0 && y > 0){
-        return true;
-    }else{
-        return false;
-    }
 }
 
 int Transazioni::getGiorno() const {
