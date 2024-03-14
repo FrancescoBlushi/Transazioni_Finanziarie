@@ -13,7 +13,7 @@ protected:
 };
 
 TEST_F(SuiteTransazione,DefaultCostructor){
-    EXPECT_EQ(T.isTipoOperazione(),true);
+    EXPECT_EQ(T.getTipoOperazione(),OperazioniFinanziarie::Prelievo);
     EXPECT_EQ(T.getDestinatario(),"me");
     EXPECT_EQ(T.getNumeroConto(),0);
     EXPECT_EQ(T.getImporto(),1);

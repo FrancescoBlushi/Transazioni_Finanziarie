@@ -23,9 +23,9 @@ public:
     void Creafile();
     bool searchConto(const Conto& inserisciconto);
     void modificaConto(Conto& inserisciconto,string nome,string cognome);
-    static bool bisestile(int year);
-    bool controlladata(int d,int m,int y);
-    int Numero_di_Conti();
+    static bool bisestile(int year);// Controllo degli anni bisestile
+    bool controlladata(int d,int m,int y);// Controlla la corretta implementazione del calendario gregoriano
+    int Numero_di_Conti();// Per conservare l'incapsulamento del vettore, il metodo restituisce il numero di Conti del cliente.
 
     //Set e Get
     const string & getName() const;

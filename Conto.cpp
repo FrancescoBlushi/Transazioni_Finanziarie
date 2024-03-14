@@ -4,24 +4,12 @@
 
 
 bool Conto::aggiungiTransazione(const Transazioni & transazione) {
-    if(!transazione.isTipoOperazione()){
-        if(transazione.getImporto()<=saldo){
-            saldo=saldo-transazione.getImporto();
-            vectorTransazione.push_back(transazione);
-            aggTransazioniFile(transazione);
-
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    else{
-        saldo=saldo+transazione.getImporto();
+    if(calcolatransazione(transazione)) {
         vectorTransazione.push_back(transazione);
         aggTransazioniFile(transazione);
-
         return true;
+    }else{
+        return false;
     }
 
 }
@@ -56,6 +44,97 @@ bool Conto::operator==(const Conto& other )  const {
     }
 }
 
+
+
+void Conto::stampaTutteTransazioni() {
+    for(auto it:vectorTransazione){
+        it.readFile();
+    }
+
+}
+
+void Conto::removeTransazione(Transazioni& transazione) {
+    auto it= find(vectorTransazione.begin(),vectorTransazione.end(),transazione);
+    if(searchTransazione(transazione)){
+        if(transazione.controllaoperazione(transazione.getTipoOperazione())){
+            saldo=saldo-transazione.getImporto();
+        }
+        else{
+            saldo=saldo+transazione.getImporto();
+        }
+        vectorTransazione.erase(it);
+    }
+
+}
+
+bool Conto::searchTransazione(Transazioni &transazione) {
+    auto it= find(vectorTransazione.begin(),vectorTransazione.end(),transazione);
+        if(it!=vectorTransazione.end()){
+            return true;
+    }
+        else{
+            return false;
+        }
+}
+
+void Conto::modificaTransazione(Transazioni & transazione,int numeroconto,double nuovoimporto,string destinatario,OperazioniFinanziarie tipooperazione) {
+    if(searchTransazione(transazione)){
+        if(transazione.controllaoperazione(transazione.getTipoOperazione())){
+            saldo=saldo-transazione.getImporto();
+        }
+        else{
+            saldo=saldo+transazione.getImporto();
+        }
+        transazione.setTipoOperazione(tipooperazione);
+        transazione.setNumeroConto(numeroconto);
+        transazione.setDestinatario(destinatario);
+        transazione.setImporto(nuovoimporto);
+        calcolatransazione(transazione);
+
+    }else{
+        return;
+    }
+
+}
+
+const int Conto::conta_nr_transazioni() {
+    return vectorTransazione.size();
+}
+
+void Conto::aggTransazioniFile(const Transazioni& transazione) {
+    ofstream file(name + "_"+ surname+Banca+".txt",ios::app);
+    if(file.is_open()){
+        file<<"Destinatario transazione: "<<transazione.getDestinatario()<<endl;
+        file<<"Importo  transazione: "<<transazione.getImporto()<<endl;
+        file<<"Data transaizone: "<<transazione.getGiorno()<<"/"<<transazione.getMese()<<"/"<<transazione.getAnno()<<endl;
+        file<<"Nuovo Saldo : "<<saldo<<endl;
+        file.close();
+    }
+    else{
+        cerr<<"File non aperto"<<endl;
+    }
+
+}
+
+bool Conto::calcolatransazione(const Transazioni &transazione)  {
+    if(!transazione.controllaoperazione(transazione.getTipoOperazione())){
+        if(transazione.getImporto()<=saldo){
+            saldo=saldo-transazione.getImporto();
+
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        saldo=saldo+transazione.getImporto();
+
+        return true;
+    }
+
+}
+
 const string &Conto::getName() const {
     return name;
 }
@@ -88,13 +167,6 @@ void Conto::setSaldo(double saldo) {
     Conto::saldo = saldo;
 }
 
-void Conto::stampaTutteTransazioni() {
-    for(auto it:vectorTransazione){
-        it.readFile();
-    }
-
-}
-
 const string &Conto::getBanca() const {
     return Banca;
 }
@@ -107,50 +179,3 @@ const vector<Transazioni> &Conto::getVectorTransazione() const {
     return vectorTransazione;
 }
 
-void Conto::removeTransazione(Transazioni& transazione) {
-    auto it= find(vectorTransazione.begin(),vectorTransazione.end(),transazione);
-    if(it!=vectorTransazione.end()){
-        vectorTransazione.erase(it);
-    }
-
-}
-
-bool Conto::searchTransazione(Transazioni &transazione) {
-    auto it= find(vectorTransazione.begin(),vectorTransazione.end(),transazione);
-        if(it!=vectorTransazione.end()){
-            return false;
-    }
-        else{
-            return true;
-        }
-}
-
-void Conto::modificaTransazione(Transazioni &transazione,int numeroconto,double nuovoimporto,string destinatario) {
-    if(searchTransazione(transazione)){
-    transazione.setNumeroConto(numeroconto);
-    transazione.setDestinatario(destinatario);
-    transazione.setImporto(nuovoimporto);
-    }else{
-        return;
-    }
-
-}
-
-const int Conto::conta_nr_transazioni() {
-    return vectorTransazione.size();
-}
-
-void Conto::aggTransazioniFile(const Transazioni& transazione) {
-    ofstream file(name + "_"+ surname+Banca+".txt",ios::app);
-    if(file.is_open()){
-        file<<"Destinatario transazione: "<<transazione.getDestinatario()<<endl;
-        file<<"Importo  transazione: "<<transazione.getImporto()<<endl;
-        file<<"Data transaizone: "<<transazione.getGiorno()<<"/"<<transazione.getMese()<<"/"<<transazione.getAnno()<<endl;
-        file<<"Nuovo Saldo : "<<saldo<<endl;
-        file.close();
-    }
-    else{
-        cerr<<"File non aperto"<<endl;
-    }
-
-}

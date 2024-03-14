@@ -6,11 +6,23 @@
 #include <exception>
 #include <vector>
 using namespace std;
+enum class OperazioniFinanziarie{
+    Bonifico,
+    Versamento,
+    Prelievo,
+    PagamentoBollette,
+    PagamentoCarta,
+    Investimento,
+    Stipendio,
+    BonificoEntrata
+
+};
+
 
 
 class Transazioni {
 public:
-    Transazioni (bool operazione= true,double import=1,int NrConto=0,string Destinatario="me",int giorno=1,int mese=1,int anno=1970) :
+    Transazioni (OperazioniFinanziarie operazione=OperazioniFinanziarie::Prelievo,double import=1,int NrConto=0,string Destinatario="me",int giorno=1,int mese=1,int anno=1970) :
     tipoOperazione(operazione),importo(import),numeroConto(NrConto),
     destinatario(Destinatario),giorno(giorno),mese(mese),anno(anno){
 
@@ -26,12 +38,12 @@ public:
     void createFile() ;
     void readFile() ;
     bool operator==(const Transazioni& other ) const;
-    bool bisestile(int year);
-    bool controlladata(int d,int m,int y);
+    bool bisestile(int year);// Usato per il calcolo dell'anno bisestile
+    bool controlladata(int d,int m,int y);// Usato per l'implementazione del calendario gregoriano
+    bool controllaoperazione(OperazioniFinanziarie op) const ;// Usata per distinguere le operazioni di entrata e uscita
+    string tipoOperazionistring(OperazioniFinanziarie op);// trasforma le istanze di enumerazione in stringhe, necessario per la creazione del file
 
     //Set e Get
-    bool isTipoOperazione() const;
-    void setTipoOperazione1(bool tipooperazione);
     void setDestinatario(const string &destinatario);
     double getImporto() const;
     void setImporto(double importo);
@@ -44,11 +56,14 @@ public:
     void setMese(int mese);
     int getAnno() const;
     void setAnno(int anno);
+    OperazioniFinanziarie getTipoOperazione() const;
+    void setTipoOperazione(OperazioniFinanziarie tipoOperazione);
+
 private:
     int giorno;
     int mese;
     int anno;
-    bool tipoOperazione;
+    OperazioniFinanziarie tipoOperazione;
     double  importo;
     int numeroConto;
     string destinatario;

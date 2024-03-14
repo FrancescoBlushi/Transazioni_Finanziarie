@@ -17,13 +17,14 @@ public:
     bool aggiungiTransazione(const Transazioni& transazione);
     void removeTransazione (Transazioni& transazione);
     bool searchTransazione(Transazioni& transazione);
-    void modificaTransazione(Transazioni& transazione,int numeroconto,double nuovoimporto,string destinatario);
+    void modificaTransazione(Transazioni& transazione,int numeroconto,double nuovoimporto,string destinatario,OperazioniFinanziarie tipoOperazione);
     void creaContoFile();
     void aggTransazioniFile(const Transazioni& transazione);
     void readContoFile()const;
     void stampaTutteTransazioni();
-    bool operator==(const Conto& other ) const;
-    int const conta_nr_transazioni();
+    bool operator==(const Conto& other ) const;// L'overloading dell'operatore (==) utile per la ricerca nel vettore.
+    int const conta_nr_transazioni();// Per conservare l'incapsulamento del vettore, il metodo restituisce il numero di transazioni.
+    bool calcolatransazione(const Transazioni& transazione);// Utile per il calcolo del saldo, usata nelle funzioni remove, aggiungi e modifica transazione
 
     //Set e Get
     const string &getName() const;

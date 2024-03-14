@@ -1,25 +1,21 @@
-
-
 #include "Transazioni.h"
 
 void Transazioni::createFile() {
-    ofstream myfile(tipoOperazione + "_" + destinatario+ ".txt");
+    ofstream myfile(tipoOperazionistring(tipoOperazione) + "_" + destinatario+ ".txt");
     if (myfile.is_open()){
-        myfile<<"Tipo di Operazione : "<<tipoOperazione<<endl;
+        myfile<<"Tipo di Operazione : "<<controllaoperazione(getTipoOperazione())<<endl;
         myfile<<"Destinatario : "<<destinatario<<endl;
         myfile<<"Numero di conto : " <<numeroConto<<endl;
-        myfile<<" Importo del "<<tipoOperazione<<":"<< importo<<endl;
+        myfile<<" Importo del "<<tipoOperazionistring(tipoOperazione)<<":"<< importo<<endl;
         myfile.close();
     }
     else{
         cerr<<"Errore file is not open"<<endl;
     }
-
-
 }
 
 void Transazioni::readFile() {
-    ifstream readfile(tipoOperazione + "_" + destinatario+ ".txt");
+    ifstream readfile(tipoOperazionistring(tipoOperazione)+ "_" + destinatario+ ".txt");
     if(readfile.is_open()){
         string linea;
         while(getline(readfile,linea)){
@@ -30,7 +26,6 @@ void Transazioni::readFile() {
     else{
         cerr<<"Errore File non aperto "<<endl;
     }
-
 }
 bool Transazioni::bisestile(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
@@ -56,6 +51,37 @@ bool Transazioni::controlladata(int d, int m, int y) {
     }
 }
 
+bool Transazioni::controllaoperazione(OperazioniFinanziarie op) const {
+    if(op==OperazioniFinanziarie::Versamento || op==OperazioniFinanziarie::BonificoEntrata || op==OperazioniFinanziarie::Stipendio){
+        return true;
+    }else{
+        return false;
+    }
+
+}
+
+string Transazioni::tipoOperazionistring(OperazioniFinanziarie op) {
+    switch (op) {
+        case OperazioniFinanziarie::BonificoEntrata:
+            return "BonificoEntrata";
+        case OperazioniFinanziarie::Versamento:
+            return "Versamento";
+        case OperazioniFinanziarie::Prelievo:
+            return "Prelievo";
+        case OperazioniFinanziarie::PagamentoBollette:
+            return "PagamentoBollette";
+        case OperazioniFinanziarie::Investimento:
+            return "Investimento";
+        case OperazioniFinanziarie::Stipendio:
+            return "Stipendio";
+        case OperazioniFinanziarie::Bonifico:
+            return "Bonifico";
+        case OperazioniFinanziarie::PagamentoCarta:
+            return "PagamentoCarta";
+    }
+}
+
+//Set e Get
 double Transazioni::getImporto() const {
     return importo;
 }
@@ -78,14 +104,6 @@ const string &Transazioni::getDestinatario() const {
 
 void Transazioni::setDestinatario(const string &destinatario) {
     Transazioni::destinatario = destinatario;
-}
-
-bool Transazioni::isTipoOperazione() const {
-    return tipoOperazione;
-}
-
-void Transazioni::setTipoOperazione1(bool tipooperazione) {
-    Transazioni::tipoOperazione = tipooperazione;
 }
 
 int Transazioni::getGiorno() const {
@@ -111,3 +129,13 @@ int Transazioni::getAnno() const {
 void Transazioni::setAnno(int anno) {
     Transazioni::anno = anno;
 }
+
+
+OperazioniFinanziarie Transazioni::getTipoOperazione() const {
+    return tipoOperazione;
+}
+
+void Transazioni::setTipoOperazione(OperazioniFinanziarie tipoOperazione) {
+    Transazioni::tipoOperazione = tipoOperazione;
+}
+
