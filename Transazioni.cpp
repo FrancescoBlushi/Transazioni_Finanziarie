@@ -27,26 +27,11 @@ void Transazioni::readFile() {
         cerr<<"Errore File non aperto "<<endl;
     }
 }
-bool Transazioni::bisestile(int year) {
-    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-}
 
 bool Transazioni::operator==(const Transazioni &other) const {
     if(importo==other.importo && destinatario==other.destinatario && numeroConto==other.numeroConto)
         return true;
     else{
-        return false;
-    }
-}
-bool Transazioni::controlladata(int d, int m, int y) {
-    if(d<=data[m] && !bisestile(y) && d > 0 && m <= 12 && m > 0 && y > 0){
-        return true;
-    } else if(bisestile(y) && d==29 && m==2){
-        return true;
-    }
-    else if (bisestile(y) && d<=data[m] && d > 0 && m <= 12 && m > 0 && y > 0){
-        return true;
-    }else{
         return false;
     }
 }
@@ -78,7 +63,9 @@ string Transazioni::tipoOperazionistring(OperazioniFinanziarie op) {
             return "Bonifico";
         case OperazioniFinanziarie::PagamentoCarta:
             return "PagamentoCarta";
+
     }
+    return " ";
 }
 
 //Set e Get

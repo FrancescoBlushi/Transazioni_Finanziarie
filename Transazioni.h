@@ -4,7 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <exception>
+#include <utility>
 #include <vector>
+#include "Calendario.h"
 using namespace std;
 enum class OperazioniFinanziarie{
     Bonifico,
@@ -24,11 +26,10 @@ class Transazioni {
 public:
     Transazioni (OperazioniFinanziarie operazione=OperazioniFinanziarie::Prelievo,double import=1,int NrConto=0,string Destinatario="me",int giorno=1,int mese=1,int anno=1970) :
     tipoOperazione(operazione),importo(import),numeroConto(NrConto),
-    destinatario(Destinatario),giorno(giorno),mese(mese),anno(anno){
-
-        if(!controlladata(giorno, mese, anno)){
-            throw invalid_argument("Data non valida");
-        }
+    destinatario(std::move(Destinatario)),giorno(giorno),mese(mese),anno(anno){
+        C.setGiorno(giorno);
+        C.setMese(mese);
+        C.setAnno(anno);
         if(import<=0){
             throw invalid_argument("Importo sbagliato");
         }
@@ -38,10 +39,8 @@ public:
     void createFile() ;
     void readFile() ;
     bool operator==(const Transazioni& other ) const;
-    bool bisestile(int year);// Usato per il calcolo dell'anno bisestile
-    bool controlladata(int d,int m,int y);// Usato per l'implementazione del calendario gregoriano
     bool controllaoperazione(OperazioniFinanziarie op) const ;// Usata per distinguere le operazioni di entrata e uscita
-    string tipoOperazionistring(OperazioniFinanziarie op);// trasforma le istanze di enumerazione in stringhe, necessario per la creazione del file
+    static string tipoOperazionistring(OperazioniFinanziarie op);// trasforma le istanze di enumerazione in stringhe, necessario per la creazione del file
 
     //Set e Get
     void setDestinatario(const string &destinatario);
@@ -67,7 +66,7 @@ private:
     double  importo;
     int numeroConto;
     string destinatario;
-    vector<int>data={0,31,28,31,30,31,30,31,31,30,31,30,31};
+    Calendario C;
 };
 
 
